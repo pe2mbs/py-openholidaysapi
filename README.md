@@ -90,11 +90,47 @@ member function to simple dump the content of the object only the properies.
 
 ## CountryObject
 
+### CountryObject.__init__( self, isoCode: str, name: List[dict], officialLanguages: List[str] ):
+Contructor used by the OpenHolidaysOrg class to initialize the object.
+
+### property CountryObject.IsoCode
+Provides the language code according to ISO639-1
+
+### property CountryObject.Language
+Same as IsoCode
+
+### property CountryObject.Text
+Provides the text in the language of this object
+
+### property CountryObject.OfficialLanguages
+Provides a list with official languages for the country
+
+### CountryObject.merge( self, obj: 'CountryObject' )
+Internal member function for merging language texts of the same country.
+
+### CountryObject.mergeLists( items: list, target: list )
+Internal function for merging country texts of the same country between two lists.
+
+### CountryObject.dump( self )
+Test member function to simple dump the content of the object.
+
 ## HolidayObject
 
 
 ## IsoTexts
 
+### IsoTexts.__init__( self, language: str, text: str ):
+
+### property IsoTexts.IsoCode
+Provides the language code according to ISO639-1
+
+### property IsoTexts.Language
+Same as IsoCode
+
+### property IsoTexts.Text
+Provides the text in the language of this object
+
+### IsoTexts.clone( self ) -> 'IsoTexts':
 
 
 # Example
