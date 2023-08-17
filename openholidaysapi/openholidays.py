@@ -25,50 +25,51 @@ class OpenHolidaysOrg( object ):
             raise OpenHolidaysOrgException(result.text, result.status_code)
 
         return resultList
-    def getCountries( self, language_code: Union[str,list,tuple] ) -> List[CountryObject]:
-        if isinstance( language_code, ( list, tuple ) ):
+
+    def getCountries( self, iso_language_code: Union[str,list,tuple] ) -> List[CountryObject]:
+        if isinstance( iso_language_code, ( list, tuple ) ):
             resultList = []
-            for lang in language_code:
-                CountryObject.mergeLists( self.getCountries( lang ), resultList )
+            for country_code in iso_language_code:
+                CountryObject.mergeLists( self.getCountries( country_code ), resultList )
 
             return resultList
 
 
-        if not isinstance( language_code, str ) or len( language_code ) != 2:
+        if not isinstance( iso_language_code, str ) or len( iso_language_code ) != 2:
             raise ValueError( "language_code must a s string of 2 characters" )
 
         return self.__execute( "https://openholidaysapi.org/Countries",
                                {
-                                   'languageIsoCode': language_code,
+                                   'languageIsoCode': iso_language_code,
                                },
                                CountryObject )
 
-    def getLanguages( self, language_code: Union[str,list,tuple] ) -> List[LanguageObject]:
-        if isinstance(language_code, (list, tuple)):
+    def getLanguages( self, iso_language_code: Union[str,list,tuple] ) -> List[LanguageObject]:
+        if isinstance(iso_language_code, (list, tuple)):
             resultList = []
-            for lang in language_code:
+            for lang in iso_language_code:
                 LanguageObject.mergeLists(self.getLanguages(lang), resultList)
 
             return resultList
 
-        if not isinstance( language_code, str ) or len( language_code ) != 2:
+        if not isinstance( iso_language_code, str ) or len( iso_language_code ) != 2:
             raise ValueError( "language_code must a s string of 2 characters" )
 
         return self.__execute("https://openholidaysapi.org/Languages",
                               {
-                                  'languageIsoCode': language_code,
+                                  'languageIsoCode': iso_language_code,
                               },
                               LanguageObject)
 
 
-    def getHolidays( self, year: int, country_code: str, language_code: Union[str,list,tuple] = None ) -> List[HolidayObject]:
-        if not isinstance( country_code, str ) or len( country_code ) != 2:
+    def getHolidays( self, year: int, iso_country_code: str, iso_language_code: Union[str,list,tuple] = None ) -> List[HolidayObject]:
+        if not isinstance( iso_country_code, str ) or len( iso_country_code ) != 2:
             raise ValueError( "country_code must be a string of 2 chaccters")
 
-        if language_code is None:
-            language_code = country_code
+        if iso_language_code is None:
+            iso_language_code = iso_country_code
 
-        if not isinstance( language_code, (str,list,tuple)):
+        if not isinstance( iso_language_code, (str,list,tuple)):
             raise ValueError( "language_code must be str, list or tuple" )
 
         if not isinstance( year, ( int, str ) ):
@@ -85,22 +86,22 @@ class OpenHolidaysOrg( object ):
             if not year.isdigit() or len( year ) != 4:
                 raise ValueError( "year must be a int or str of 4 digits" )
 
-        if isinstance( language_code, ( list, tuple ) ):
+        if isinstance( iso_language_code, ( list, tuple ) ):
             resultList = []
-            for lang in language_code:
-                HolidayObject.mergeLists( self.getHolidays(year, country_code, lang ), resultList)
+            for lang in iso_language_code:
+                HolidayObject.mergeLists( self.getHolidays(year, iso_country_code, lang ), resultList)
 
             return resultList
 
-        if not isinstance( language_code, str ) or len( language_code ) != 2:
+        if not isinstance( iso_language_code, str ) or len( iso_language_code ) != 2:
             raise ValueError( "language_code must be a string of 2 chaccters")
 
         return self.__execute("https://openholidaysapi.org/PublicHolidays",
                               {
-                                  'countryIsoCode': country_code,
-                                  'languageIsoCode': language_code,
+                                  'countryIsoCode': iso_country_code,
+                                  'languageIsoCode': iso_language_code,
                                   'validFrom': f'{year}-01-01',
                                   'validTo': f'{year}-12-31'
                               },
                               HolidayObject,
-                              isoCode = country_code )
+                              isoCode = iso_country_code )
